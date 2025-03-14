@@ -1,9 +1,6 @@
-import { CiShoppingCart, CiUser } from 'react-icons/ci'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { APP_NAME } from '@/lib/constants'
-import ModeToggle from './modeToggle'
+import Menu from './menu'
 
 const Header = () => {
 	return (
@@ -25,19 +22,7 @@ const Header = () => {
 						</div>
 					</Link>
 				</div>
-				<div className='space-x-2'>
-					<ModeToggle />
-					<Button asChild variant={'ghost'}>
-						<Link href={'/cart'}>
-							<CiShoppingCart /> Cart
-						</Link>
-					</Button>
-					<Button asChild variant={'ghost'}>
-						<Link href={'/sign-in'}>
-							<CiUser /> Sign In
-						</Link>
-					</Button>
-				</div>
+				<Menu />
 			</div>
 		</header>
 	)
