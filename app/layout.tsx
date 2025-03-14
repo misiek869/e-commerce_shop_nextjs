@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Inter } from 'next/font/google'
 import '@/assets/styles/globals.css'
 import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants'
+import { ThemeProvider } from 'next-themes'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -28,8 +29,16 @@ export default function RootLayout({
 	children: React.ReactNode
 }>) {
 	return (
-		<html lang='en'>
-			<body className={`${inter.className}`}>{children}</body>
+		<html lang='en' suppressHydrationWarning>
+			<body className={`${inter.className}`}>
+				<ThemeProvider
+					attribute={'class'}
+					defaultTheme='light'
+					enableSystem
+					disableTransitionOnChange>
+					{children}
+				</ThemeProvider>
+			</body>
 		</html>
 	)
 }
