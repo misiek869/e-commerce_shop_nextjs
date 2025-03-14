@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
+import ProductPrice from './productPrice'
 
 const ProductCard = ({ product }: { product: any }) => {
 	return (
@@ -31,7 +32,9 @@ const ProductCard = ({ product }: { product: any }) => {
 				<div className='flex-between gap-4'>
 					<p className=''>{product.rating} Stars</p>
 					{product.stock > 1 ? (
-						<p className='font-bold'>{product.price}</p>
+						<p className='font-bold'>
+							<ProductPrice value={Number(product.price)} />
+						</p>
 					) : (
 						<p className='text-destructive'>Out Of Stock</p>
 					)}
