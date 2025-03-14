@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Inter } from 'next/font/google'
 import '@/assets/styles/globals.css'
+import { APP_DESCRIPTION, APP_NAME, SERVER_URL } from '@/lib/constants'
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -16,8 +17,9 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-	title: 'Super Shop',
-	description: 'Super E-commerce Shop',
+	title: `${APP_NAME}`,
+	description: `${APP_DESCRIPTION}`,
+	metadataBase: new URL(SERVER_URL),
 }
 
 export default function RootLayout({
