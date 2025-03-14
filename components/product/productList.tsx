@@ -1,4 +1,5 @@
 import React from 'react'
+import ProductCard from './productCard'
 
 type ProductListProps = {
 	data: any
@@ -15,11 +16,8 @@ const ProductList = ({ data, title, limit }: ProductListProps) => {
 			{data.length > 0 ? (
 				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
 					{limitedData.map((product: any, index: number) => {
-						return (
-							<div key={index} className=''>
-								{product.name}
-							</div>
-						)
+						console.log(product)
+						return <ProductCard product={product} key={product.slug} />
 					})}
 				</div>
 			) : (
