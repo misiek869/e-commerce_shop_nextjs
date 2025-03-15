@@ -4,7 +4,7 @@ type ProductPriceProp = {
 }
 import { cn } from '@/lib/utils'
 
-const ProductPrice = ({ value, className }) => {
+const ProductPrice = ({ value, className }: ProductPriceProp) => {
 	const stringValue = value.toFixed(2)
 
 	const [intValue, floatValue] = stringValue.split('.')
