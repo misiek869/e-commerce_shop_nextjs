@@ -7,7 +7,6 @@ import { TbSunMoon } from 'react-icons/tb'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
