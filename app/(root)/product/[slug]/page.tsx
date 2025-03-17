@@ -4,20 +4,23 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import ProductPrice from '@/components/product/productPrice'
+import ProductImage from '@/components/product/ProductImage'
 
 const SingleProductPage = async (props: {
 	params: Promise<{ slug: string }>
 }) => {
 	const { slug } = await props.params
-
 	const product = await getSingleProduct(slug)
+
 	if (!product) notFound()
 
 	return (
 		<>
 			<section className=''>
 				<div className='grid grid-cols-1 md:grid-cols-5'>
-					<div className='col-span-2'>{/* img */}</div>
+					<div className='col-span-2'>
+						<ProductImage images={product.images} />
+					</div>
 					{/* column */}
 					<div className='col-span-2 p-6'>
 						<div className='flex flex-col gap-6'>

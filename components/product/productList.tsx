@@ -17,7 +17,6 @@ const ProductList = ({ data, title, limit }: ProductListProps) => {
 			{data.length > 0 ? (
 				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
 					{limitedData.map((product: ProductType) => {
-						console.log(product)
 						return <ProductCard product={product} key={product.slug} />
 					})}
 				</div>
