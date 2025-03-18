@@ -8,6 +8,7 @@ import {
 import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import CredentialsSingInForm from '@/components/credentials/CredentialsSingInForm'
 
 export const metadata: Metadata = {
 	title: 'Sign In',
@@ -32,7 +33,9 @@ const SingInPage = () => {
 						Sign in to your account
 					</CardDescription>
 				</CardHeader>
-				<CardContent className='space-y-4'></CardContent>
+				<CardContent className='space-y-4'>
+					<CredentialsSingInForm />
+				</CardContent>
 			</Card>
 		</div>
 	)
