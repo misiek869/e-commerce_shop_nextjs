@@ -9,12 +9,20 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import CredentialsSingInForm from '@/components/credentials/CredentialsSingInForm'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
 	title: 'Sign In',
 }
 
-const SingInPage = () => {
+const SingInPage = async () => {
+	const session = await auth()
+
+	if (session) {
+		return redirect('/')
+	}
+
 	return (
 		<div className='w-full max-w-md mx-auto'>
 			<Card>

@@ -21,7 +21,7 @@ export async function singInWithCredentials(
 		if (isRedirectError(error)) {
 			throw error
 		}
-		return { success: false, message: 'Invalid email od password' }
+		return { success: false, message: 'Invalid email or password' }
 	}
 }
 
