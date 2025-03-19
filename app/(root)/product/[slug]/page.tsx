@@ -1,10 +1,11 @@
 import { getSingleProduct } from '@/lib/actions/product.actions'
 import { notFound } from 'next/navigation'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+
 import { Card, CardContent } from '@/components/ui/card'
 import ProductPrice from '@/components/product/productPrice'
 import ProductImage from '@/components/product/ProductImage'
+import AddToCard from '@/components/product/AddToCard'
 
 const SingleProductPage = async (props: {
 	params: Promise<{ slug: string }>
@@ -66,9 +67,16 @@ const SingleProductPage = async (props: {
 								<div className='mt-4'>
 									{product.stock > 0 && (
 										<div className='flex-center'>
-											<Button variant={'default'} className='w-full'>
-												Add To Card
-											</Button>
+											<AddToCard
+												item={{
+													productId: product.id,
+													name: product.name,
+													slug: product.slug,
+													quantity: 1,
+													image: product.images![0],
+													price: product.price,
+												}}
+											/>
 										</div>
 									)}
 								</div>
