@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { CiShoppingCart, CiUser } from 'react-icons/ci'
 import Link from 'next/link'
 import { HiEllipsisVertical } from 'react-icons/hi2'
+import UserButton from './userButton'
 
 const Menu = () => {
 	return (
@@ -21,11 +22,7 @@ const Menu = () => {
 						<CiShoppingCart /> Cart
 					</Link>
 				</Button>
-				<Button asChild variant={'ghost'}>
-					<Link href={'/sign-in'}>
-						<CiUser /> Sign In
-					</Link>
-				</Button>
+				<UserButton />
 			</nav>
 			<nav className='md:hidden'>
 				<Sheet>
@@ -40,11 +37,7 @@ const Menu = () => {
 								<CiShoppingCart /> Cart
 							</Link>
 						</Button>
-						<Button asChild variant={'ghost'}>
-							<Link href={'/sign-in'}>
-								<CiUser /> Sign In
-							</Link>
-						</Button>
+						<UserButton />
 						<SheetDescription></SheetDescription>
 					</SheetContent>
 				</Sheet>

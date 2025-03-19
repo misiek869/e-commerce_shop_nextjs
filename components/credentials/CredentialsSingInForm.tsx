@@ -6,12 +6,16 @@ import Link from 'next/link'
 import { singInWithCredentials } from '@/lib/actions/user.actions'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { useSearchParams } from 'next/navigation'
 
 const CredentialsSingInForm = () => {
 	const [data, action] = useActionState(singInWithCredentials, {
 		success: false,
 		message: '',
 	})
+
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get('callbackUrl') || '/'
 
 	const SingInBtn = () => {
 		const { pending } = useFormStatus()
@@ -25,6 +29,7 @@ const CredentialsSingInForm = () => {
 
 	return (
 		<form action={action}>
+			<input type='hidden' name='callbackUrl' value={callbackUrl} />
 			<div className='space-y-6'>
 				<div className=''>
 					<Label htmlFor='email'>Email</Label>
