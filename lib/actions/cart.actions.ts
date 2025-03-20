@@ -1,12 +1,30 @@
 'use server'
 
 import { prisma } from '@/db/prisma'
-import { convertToJsPlainObject, formatError } from '../utils'
-import { LATEST_PRODUCTS_LIMIT } from '../constants'
+import { convertToJsPlainObject, formatError, roundNUmber } from '../utils'
+// import { LATEST_PRODUCTS_LIMIT } from '../constants'
 import { CartItem } from '@/types'
 import { cookies } from 'next/headers'
 import { auth } from '@/auth'
-import { cartItemSchema } from '../validators'
+import { cartItemSchema, insertCartSchema } from '../validators'
+import { revalidatePath } from 'next/cache'
+
+// calculate prices
+const calcPrice = (items: CartItem[]) => {
+	const itemsPrice = roundNUmber(
+			items.reduce((acc, item) => acc + Number(item.price) * item.quantity, 0)
+		),
+		shippingPrice = roundNUmber(itemsPrice > 100 ? 0 : 10),
+		taxPrice = roundNUmber(0.23 * itemsPrice),
+		totalPrice = roundNUmber(itemsPrice + taxPrice + shippingPrice)
+
+	return {
+		itemsPrice: itemsPrice.toFixed(2),
+		shippingPrice: shippingPrice.toFixed(2),
+		taxPrice: taxPrice.toFixed(2),
+		totalPrice: totalPrice.toFixed(2),
+	}
+}
 
 export async function addItemToCart(data: CartItem) {
 	try {
@@ -26,17 +44,26 @@ export async function addItemToCart(data: CartItem) {
 			where: { id: item.productId },
 		})
 
-		// console.log({
-		// 	UserID: userId,
-		// 	'session cardId': sessionCartId,
-		// 	'Item requested': item,
-		// 	'Product found': product,
-		// })
+		if (!product) throw new Error('Product not found')
+		if (!cart) {
+			const newCart = insertCartSchema.parse({
+				userId: userId,
+				items: [item],
+				sessionCartId: sessionCartId,
+				...calcPrice([item]),
+			})
+
+			await prisma.cart.create({
+				data: newCart,
+			})
+
+			revalidatePath(`/product/${product.slug}`)
+			return { success: true, message: 'item added' }
+		} else {
+		}
 	} catch (error) {
 		return { success: false, message: formatError(error) }
 	}
-
-	return { success: true, message: 'item added' }
 }
 
 export async function getMyCart() {
@@ -59,10 +86,10 @@ export async function getMyCart() {
 	// if cart exists convert decimals and return
 	return convertToJsPlainObject({
 		...cart,
-		items: cart.Items as CartItem[],
-		itemsPrice: cart.ItemsPrice.toString(),
-		totalPrice: cart.TotalPrice.toString(),
-		shippingPrice: cart.ShippingPrice.toString(),
-		taxPrice: cart.TaxPrice.toString(),
+		items: cart.items as CartItem[],
+		itemsPrice: cart.itemsPrice.toString(),
+		totalPrice: cart.totalPrice.toString(),
+		shippingPrice: cart.shippingPrice.toString(),
+		taxPrice: cart.taxPrice.toString(),
 	})
 }
