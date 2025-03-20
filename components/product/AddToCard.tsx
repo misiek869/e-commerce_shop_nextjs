@@ -1,6 +1,5 @@
 'use client'
 
-import { CartItem } from '@/types'
 import { Button } from '@/components/ui/button'
 import { CartItem } from '@/types'
 import { FaCirclePlus, FaCircleMinus } from 'react-icons/fa6'
@@ -9,43 +8,50 @@ import { useToast } from '@/hooks/use-toast'
 import { ToastAction } from '../ui/toast'
 import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions'
 import { Cart } from '@/types'
+import { useTransition } from 'react'
+import { RiLoader4Fill } from 'react-icons/ri'
 
 const AddToCard = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
 	const router = useRouter()
 	const { toast } = useToast()
+	const [isPending, startTransition] = useTransition()
 
 	const handleAddToCart = async () => {
-		const response = await addItemToCart(item)
+		startTransition(async () => {
+			const response = await addItemToCart(item)
 
-		if (!response.success) {
+			if (!response.success) {
+				toast({
+					variant: 'destructive',
+					description: response.message,
+				})
+				return
+			}
+
 			toast({
-				variant: 'destructive',
 				description: response.message,
+				action: (
+					<ToastAction
+						className='bg-primary text-slate-100 hover:bg-slate-600 '
+						altText='Go To Cart'
+						onClick={() => router.push('/cart')}>
+						Go To Cart
+					</ToastAction>
+				),
 			})
-			return
-		}
-
-		toast({
-			description: response.message,
-			action: (
-				<ToastAction
-					className='bg-primary text-slate-100 hover:bg-slate-600 '
-					altText='Go To Cart'
-					onClick={() => router.push('/cart')}>
-					Go To Cart
-				</ToastAction>
-			),
 		})
 	}
 	const handleRemoveFromCart = async () => {
-		const response = await removeItemFromCart(item.productId)
+		startTransition(async () => {
+			const response = await removeItemFromCart(item.productId)
 
-		toast({
-			variant: response.success ? 'default' : 'destructive',
-			description: response.message,
+			toast({
+				variant: response.success ? 'default' : 'destructive',
+				description: response.message,
+			})
+
+			return
 		})
-
-		return
 	}
 
 	// check if is in the cart
@@ -55,11 +61,19 @@ const AddToCard = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
 	return existItem ? (
 		<div className=''>
 			<Button type='button' variant={'outline'} onClick={handleRemoveFromCart}>
-				<FaCircleMinus className='h-4 w-4' />
+				{isPending ? (
+					<RiLoader4Fill className='w-4 h-4 animate-spin' />
+				) : (
+					<FaCircleMinus className='h-4 w-4' />
+				)}
 			</Button>
 			<span className='px-2'>{existItem.quantity}</span>
 			<Button type='button' variant={'outline'} onClick={handleAddToCart}>
-				<FaCirclePlus className='h-4 w-4' />
+				{isPending ? (
+					<RiLoader4Fill className='w-4 h-4 animate-spin' />
+				) : (
+					<FaCirclePlus className='h-4 w-4' />
+				)}
 			</Button>
 		</div>
 	) : (
@@ -67,7 +81,11 @@ const AddToCard = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
 			className='w-full capitalize'
 			type='button'
 			onClick={handleAddToCart}>
-			add to cart
+			{isPending ? (
+				<RiLoader4Fill className='w-4 h-4 animate-spin' />
+			) : (
+				'Add To Cart'
+			)}
 		</Button>
 	)
 }
