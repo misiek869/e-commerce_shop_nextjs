@@ -38,6 +38,7 @@ const CredentialsSingInForm = () => {
 						name='email'
 						type='email'
 						required
+						defaultValue={'michael@michael.com'}
 						autoComplete='email'
 					/>
 				</div>
@@ -49,6 +50,7 @@ const CredentialsSingInForm = () => {
 						type='password'
 						required
 						autoComplete='password'
+						defaultValue={'123456'}
 					/>
 				</div>
 				<SingInBtn />
