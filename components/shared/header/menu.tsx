@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/sheet'
 import ModeToggle from './modeToggle'
 import { Button } from '@/components/ui/button'
-import { CiShoppingCart, CiUser } from 'react-icons/ci'
+import { CiShoppingCart } from 'react-icons/ci'
 import Link from 'next/link'
 import { HiEllipsisVertical } from 'react-icons/hi2'
 import UserButton from './userButton'
