@@ -26,12 +26,12 @@ export async function addItemToCart(data: CartItem) {
 			where: { id: item.productId },
 		})
 
-		console.log({
-			UserID: userId,
-			'session cardId': sessionCartId,
-			'Item requested': item,
-			'Product found': product,
-		})
+		// console.log({
+		// 	UserID: userId,
+		// 	'session cardId': sessionCartId,
+		// 	'Item requested': item,
+		// 	'Product found': product,
+		// })
 	} catch (error) {
 		return { success: false, message: formatError(error) }
 	}

@@ -33,3 +33,15 @@ export async function formatError(error: any) {
 			: JSON.stringify(error.message)
 	}
 }
+
+// round numbers to 2 decimal places
+
+export function roundNUmber(value: number | string) {
+	if (typeof value === 'number') {
+		return Math.round((value + Number.EPSILON) * 100) / 100
+	} else if (typeof value === 'string') {
+		return Math.round((Number(value) + Number.EPSILON) * 100) / 100
+	} else {
+		throw new Error('Value must be a number or string')
+	}
+}
