@@ -1,6 +1,7 @@
 'use server'
 
 import { prisma } from '@/db/prisma'
+import { Prisma } from '@prisma/client'
 import { convertToJsPlainObject, formatError, roundNUmber } from '../utils'
 // import { LATEST_PRODUCTS_LIMIT } from '../constants'
 import { CartItem } from '@/types'
@@ -58,8 +59,42 @@ export async function addItemToCart(data: CartItem) {
 			})
 
 			revalidatePath(`/product/${product.slug}`)
-			return { success: true, message: 'item added' }
+			return { success: true, message: `${product.name} added to cart` }
 		} else {
+			const existingItem = (cart.items as CartItem[]).find(x => {
+				return x.productId === item.productId
+			})
+
+			if (existingItem) {
+				// check  stock
+				if (product.stock < existingItem.quantity + 1) {
+					throw new Error('Not enough products')
+				}
+
+				// cart.items.find(x => x.productId === item.productId)!.quantity =
+				// 	existingItem.quantity + 1
+				existingItem.quantity++
+			} else {
+				if (product.stock < 1) throw new Error('Not enough products')
+				cart.items.push(item)
+			}
+
+			await prisma.cart.update({
+				where: { id: cart.id },
+				data: {
+					items: cart.items as Prisma.CartUpdateitemsInput[],
+					...calcPrice(cart.items as CartItem[]),
+				},
+			})
+
+			revalidatePath(`/product/${product.slug}`)
+
+			return {
+				success: true,
+				message: `${product.name} ${
+					existingItem ? 'updated' : 'added to'
+				} cart`,
+			}
 		}
 	} catch (error) {
 		return { success: false, message: formatError(error) }

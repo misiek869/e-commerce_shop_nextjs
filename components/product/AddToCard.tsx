@@ -25,7 +25,7 @@ const AddToCard = ({ item }: { item: CartItem }) => {
 		}
 
 		toast({
-			description: `${item.name} added to cart`,
+			description: response.message,
 			action: (
 				<ToastAction
 					className='bg-primary text-slate-100 hover:bg-slate-600 '
