@@ -128,3 +128,51 @@ export async function getMyCart() {
 		taxPrice: cart.taxPrice.toString(),
 	})
 }
+
+export async function removeItemFromCart(productId: string) {
+	try {
+		const sessionCartId = (await cookies()).get('sessionCartId')?.value
+
+		if (!sessionCartId) throw new Error("Can't found cart session")
+
+		const product = await prisma.product.findFirst({
+			where: {
+				id: productId,
+			},
+		})
+
+		if (!product) throw new Error("Can't find product")
+
+		const userCart = await getMyCart()
+		if (!userCart) throw new Error("Can't find cart")
+
+		const existingItem = userCart.items.find(
+			item => item.productId === productId
+		)
+
+		if (!existingItem) throw new Error("Can't find item")
+
+		if (existingItem.quantity === 1) {
+			userCart.items = userCart.items.filter(
+				item => item.productId !== existingItem.productId
+			)
+		} else {
+			userCart.items.find(item => item.productId === productId)!.quantity =
+				existingItem - 1
+		}
+
+		await prisma.cart.update({
+			where: { id: userCart.id },
+			data: {
+				items: userCart.items as Prisma.CartUpdateitemsInput[],
+				...calcPrice(userCart.items as CartItem[]),
+			},
+		})
+
+		revalidatePath(`/product/${product.slug}`)
+
+		return { success: true, message: `${product.name} removed successfully` }
+	} catch (error) {
+		return { success: false, message: formatError(error) }
+	}
+}
