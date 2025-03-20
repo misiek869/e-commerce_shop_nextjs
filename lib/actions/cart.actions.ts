@@ -158,7 +158,7 @@ export async function removeItemFromCart(productId: string) {
 			)
 		} else {
 			userCart.items.find(item => item.productId === productId)!.quantity =
-				existingItem - 1
+				existingItem.quantity - 1
 		}
 
 		await prisma.cart.update({
