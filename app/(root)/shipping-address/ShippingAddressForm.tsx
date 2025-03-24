@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControllerRenderProps, useForm } from 'react-hook-form'
+import { ControllerRenderProps, useForm, SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 import { ShippingAddressType } from '@/types'
 import { useRouter } from 'next/navigation'
@@ -22,6 +22,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { TbLoader } from 'react-icons/tb'
 import { FaArrowRight } from 'react-icons/fa'
+import { updateUserAddress } from '@/lib/actions/user.actions'
 
 const ShippingAddressForm = ({ address }: { address: ShippingAddressType }) => {
 	const router = useRouter()
@@ -33,8 +34,21 @@ const ShippingAddressForm = ({ address }: { address: ShippingAddressType }) => {
 		defaultValues: address || shippingAddressDefaultValues,
 	})
 
-	function onSubmit(values: z.infer<typeof shippingAddressSchema>) {
-		console.log(values)
+	const onSubmit: SubmitHandler<
+		z.infer<typeof shippingAddressSchema>
+	> = async values => {
+		startTransition(async () => {
+			const response = await updateUserAddress(values)
+
+			if (!response) {
+				toast({
+					variant: 'destructive',
+					description: response.message,
+				})
+			}
+
+			router.push('/payment-method')
+		})
 	}
 
 	return (
