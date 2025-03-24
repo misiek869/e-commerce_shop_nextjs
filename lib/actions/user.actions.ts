@@ -4,6 +4,7 @@ import {
 	shippingAddressSchema,
 	signInSchema,
 	signUpSchema,
+	paymentMethodsSchema,
 } from '../validators'
 import { auth, signIn, signOut } from '@/auth'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
@@ -87,7 +88,7 @@ export async function getUserById(userId: string) {
 export async function updateUserAddress(data: ShippingAddressType) {
 	try {
 		const session = await auth()
-		const currentUser = prisma.user.findFirst({
+		const currentUser = await prisma.user.findFirst({
 			where: { id: session?.user?.id },
 		})
 
@@ -99,6 +100,32 @@ export async function updateUserAddress(data: ShippingAddressType) {
 		await prisma.user.update({
 			where: { id: session?.user?.id },
 			data: { address },
+		})
+
+		return { success: true, message: 'User updated successfully' }
+	} catch (error) {
+		return { success: false, message: formatError(error) }
+	}
+}
+
+export async function updateUserPaymentMethod(
+	data: z.infer<typeof paymentMethodsSchema>
+) {
+	try {
+		const session = await auth()
+		const currentUser = await prisma.user.findFirst({
+			where: { id: session?.user?.id },
+		})
+
+		if (!currentUser) {
+			throw new Error("Can't find user")
+		}
+
+		const paymentMethod = paymentMethodsSchema.parse(data)
+
+		await prisma.user.update({
+			where: { id: session?.user?.id },
+			data: { paymentMethod: paymentMethod.type },
 		})
 
 		return { success: true, message: 'User updated successfully' }
