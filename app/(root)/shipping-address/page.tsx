@@ -7,6 +7,7 @@ import { ShippingAddressType } from '@/types'
 import ShippingAddressForm from './ShippingAddressForm'
 import { shippingAddressSchema } from '@/lib/validators'
 import { shippingAddressDefaultValues } from '@/lib/constants'
+import CheckoutSteps from '@/components/product/CheckoutSteps'
 
 export const metadata = {
 	title: 'Shipping Address',
@@ -26,9 +27,9 @@ const ShippingAddressPage = async () => {
 		throw new Error('No User Id')
 	}
 
-	
 	return (
 		<>
+			<CheckoutSteps current={1} />
 			<ShippingAddressForm address={user.address as ShippingAddressType} />
 		</>
 	)

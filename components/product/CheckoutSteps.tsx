@@ -17,7 +17,7 @@ const CheckoutSteps = ({ current = 0 }) => {
 								{item}
 							</div>
 							{item !== 'Place Order' && (
-								<hr className='w-16 border-slate-600 mx-2'></hr>
+								<hr className='w-16 border-slate-300 mx-2'></hr>
 							)}
 						</React.Fragment>
 					)
