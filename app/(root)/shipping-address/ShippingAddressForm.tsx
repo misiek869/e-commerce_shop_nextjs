@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ControllerRenderProps, useForm, SubmitHandler } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { z } from 'zod'
 import { ShippingAddressType } from '@/types'
 import { useRouter } from 'next/navigation'
@@ -12,7 +12,6 @@ import { shippingAddressDefaultValues } from '@/lib/constants'
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
