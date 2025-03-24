@@ -7,20 +7,22 @@ import { useTransition } from 'react'
 import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions'
 import { FaArrowRight } from 'react-icons/fa'
 import { FaPlus, FaMinus } from 'react-icons/fa6'
-import { FaRegSmileWink } from 'react-icons/fa'
+// import { FaRegSmileWink } from 'react-icons/fa'
 import { TbLoader } from 'react-icons/tb'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
 	Table,
 	TableBody,
-	TableCaption,
 	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { formatCurrency } from '@/lib/utils'
+import { start } from 'repl'
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
 	const router = useRouter()
@@ -28,7 +30,7 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
 	const [isPending, startTransition] = useTransition()
 
 	return (
-		<div>
+		<>
 			<h1 className='py-4 font-semibold text-2xl lg:text-3xl tracking-wide'>
 				Shopping Cart
 			</h1>
@@ -127,9 +129,33 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
 							</TableBody>
 						</Table>
 					</div>
+					<Card>
+						<CardContent className='p-4 gap-4'>
+							<div className='pb-3 text-xl'>
+								Subtotal (
+								{cart.items.reduce((acc, item) => acc + item.quantity, 0)}):
+								<span className='font-bold'>
+									{formatCurrency(cart.itemsPrice)}
+								</span>
+							</div>
+							<Button
+								className='w-full'
+								disabled={isPending}
+								onClick={() =>
+									startTransition(() => router.push('/shipping-address'))
+								}>
+								{isPending ? (
+									<TbLoader className='w-4 h-4 animate-spin' />
+								) : (
+									<FaArrowRight className='w-4 h-4' />
+								)}{' '}
+								Proceed to Checkout
+							</Button>
+						</CardContent>
+					</Card>
 				</div>
 			)}
-		</div>
+		</>
 	)
 }
 
